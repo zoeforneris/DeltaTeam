@@ -328,8 +328,14 @@ private void handleInsertPerson() {
             if ((ImageIcon) (update.getPhoto().getIcon()) != null) {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
             }
-            update(p);
-            update.getReset().doClick();
+
+            try {
+                update(p);
+                JOptionPane.showMessageDialog(insert, "Person updated successfully!", "Update - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+                update.getReset().doClick();
+            } catch (Exception ex) {
+            }
+
         }
     }
 
