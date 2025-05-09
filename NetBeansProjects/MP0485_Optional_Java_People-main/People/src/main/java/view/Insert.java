@@ -33,6 +33,12 @@ public class Insert extends javax.swing.JDialog {
         DropPhotoListener d = new DropPhotoListener(photo, this);
         DropTarget dropTarget = new DropTarget(photo, d);
         insert.setEnabled(false); 
+        
+        if (dateOfBirth.getComponent(1) instanceof JButton) {
+            JButton datePickerButton = (JButton) dateOfBirth.getComponent(1);
+            datePickerButton.setText("Select a date");
+            datePickerButton.setPreferredSize(new Dimension(150, 25)); 
+        }
     }
 
     public JButton getReset() {
@@ -80,7 +86,6 @@ public class Insert extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         dateOfBirth = new org.jdatepicker.JDatePicker();
         jPanel1 = new javax.swing.JPanel();
-        dateOfBirthButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert - People v1.1.0");
@@ -247,7 +252,9 @@ public class Insert extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 2;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
         getContentPane().add(dateOfBirth, gridBagConstraints);
 
@@ -256,12 +263,6 @@ public class Insert extends javax.swing.JDialog {
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         getContentPane().add(jPanel1, gridBagConstraints);
-
-        dateOfBirthButton.setText("Select your date");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        getContentPane().add(dateOfBirthButton, gridBagConstraints);
 
         pack();
         setLocationRelativeTo(null);
@@ -341,7 +342,6 @@ public class Insert extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdatepicker.JDatePicker dateOfBirth;
-    private javax.swing.JButton dateOfBirthButton;
     private javax.swing.JButton insert;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
