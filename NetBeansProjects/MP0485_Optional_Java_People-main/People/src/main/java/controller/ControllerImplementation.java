@@ -279,8 +279,13 @@ private void handleInsertPerson() {
     public void handleDeletePerson() {
         if (delete != null) {
             Person p = new Person(delete.getNif().getText());
-            delete(p);
-            delete.getReset().doClick();
+
+            try {
+                delete(p);
+                JOptionPane.showMessageDialog(insert, "Person deleted successfully!", "Delete - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+                delete.getReset().doClick();
+            } catch (Exception ex) {
+            }
         }
     }
 
