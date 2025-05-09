@@ -224,9 +224,9 @@ public class ControllerImplementation implements IController, ActionListener {
         insert = new Insert(menu, true);
         insert.getInsert().addActionListener(this);
         insert.setVisible(true);
-    }
+    } 
 
-    private void handleInsertPerson() {
+private void handleInsertPerson() {
         Person p = new Person(insert.getNam().getText(), insert.getNif().getText());
         if (insert.getDateOfBirth().getModel().getValue() != null) {
             p.setDateOfBirth(((GregorianCalendar) insert.getDateOfBirth().getModel().getValue()).getTime());
@@ -234,8 +234,12 @@ public class ControllerImplementation implements IController, ActionListener {
         if (insert.getPhoto().getIcon() != null) {
             p.setPhoto((ImageIcon) insert.getPhoto().getIcon());
         }
-        insert(p);
-        insert.getReset().doClick();
+        try {
+            insert(p);
+            JOptionPane.showMessageDialog(insert, "Person inserted successfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+            insert.getReset().doClick();
+        } catch (Exception ex) {
+        }
     }
 
     private void handleReadAction() {
@@ -275,8 +279,13 @@ public class ControllerImplementation implements IController, ActionListener {
     public void handleDeletePerson() {
         if (delete != null) {
             Person p = new Person(delete.getNif().getText());
-            delete(p);
-            delete.getReset().doClick();
+
+            try {
+                delete(p);
+                JOptionPane.showMessageDialog(insert, "Person deleted successfully!", "Delete - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+                delete.getReset().doClick();
+            } catch (Exception ex) {
+            }
         }
     }
 
@@ -324,8 +333,14 @@ public class ControllerImplementation implements IController, ActionListener {
             if ((ImageIcon) (update.getPhoto().getIcon()) != null) {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
             }
-            update(p);
-            update.getReset().doClick();
+
+            try {
+                update(p);
+                JOptionPane.showMessageDialog(insert, "Person updated successfully!", "Update - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+                update.getReset().doClick();
+            } catch (Exception ex) {
+            }
+
         }
     }
 
