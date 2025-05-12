@@ -20,11 +20,44 @@ public class ReadAll extends javax.swing.JDialog {
         table.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );
         table.getColumnModel().getColumn(3).setCellRenderer( centerRenderer );
         setLocationRelativeTo(null);
+        exportButton.addActionListener(e -> exportToCSV());
+
     }
 
     public JTable getTable() {
         return table;
     }
+    
+    private void exportToCSV() {
+    try {
+        String filename = "people_data_" + new java.text.SimpleDateFormat("yyyyMMdd").format(new java.util.Date()) + ".csv";
+        java.io.FileWriter fw = new java.io.FileWriter(filename);
+
+        // Write column names
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            fw.write(table.getColumnName(i));
+            if (i < table.getColumnCount() - 1) fw.write(",");
+        }
+        fw.write("\n");
+
+        // Write rows
+        for (int i = 0; i < table.getRowCount(); i++) {
+            for (int j = 0; j < table.getColumnCount(); j++) {
+                fw.write(table.getValueAt(i, j).toString());
+                if (j < table.getColumnCount() - 1) fw.write(",");
+            }
+            fw.write("\n");
+        }
+
+        fw.close();
+        javax.swing.JOptionPane.showMessageDialog(this, "Exported to CSV!");
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(this, "Error exporting: " + ex.getMessage());
+    }
+}
+
 
     
     /**
@@ -40,6 +73,7 @@ public class ReadAll extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        exportButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Read All - People v1.1.0");
@@ -87,15 +121,24 @@ public class ReadAll extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(12, 24, 12, 24);
         getContentPane().add(jLabel2, gridBagConstraints);
+
+        exportButton.setText("EXPORT DATA");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        getContentPane().add(exportButton, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton exportButton;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable table;
