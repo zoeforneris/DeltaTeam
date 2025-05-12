@@ -372,20 +372,17 @@ private void handleInsertPerson() {
 
     public void handleDeleteAll() {
         Object[] options = {"Yes", "No"};
-        //int answer = JOptionPane.showConfirmDialog(menu, "Are you sure to delete all people registered?", "Delete All - People v1.1.0", 0, 0);
-        int answer = JOptionPane.showOptionDialog(
-        menu,
-        "Are you sure you want to delete all registered people?", 
-        "Delete All - People v1.1.0",
-        JOptionPane.YES_NO_OPTION,
-        JOptionPane.WARNING_MESSAGE,
-        null,
-        options,
-        options[1] // Default selection is "No"
-    );
+        int answer = JOptionPane.showOptionDialog(menu, "Are you sure you want to delete all registered people?", "Delete All - People v1.1.0", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
 
         if (answer == 0) {
-            deleteAll();
+            try {
+                    deleteAll();
+                    JOptionPane.showMessageDialog(insert, "All people deleted successfully!", "DeleteAll - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(insert, "An error occurred while deleting the person.", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+            
         }
     }
     
