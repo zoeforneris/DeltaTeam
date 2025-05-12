@@ -277,14 +277,20 @@ private void handleInsertPerson() {
     }
 
     public void handleDeletePerson() {
+        
         if (delete != null) {
-            Person p = new Person(delete.getNif().getText());
+            int confirm = JOptionPane.showConfirmDialog(insert, "Are you sure you want to delete this person?", "Confirm Deletion", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (confirm == JOptionPane.YES_OPTION) {
+                Person p = new Person(delete.getNif().getText());
 
-            try {
-                delete(p);
-                JOptionPane.showMessageDialog(insert, "Person deleted successfully!", "Delete - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
-                delete.getReset().doClick();
-            } catch (Exception ex) {
+                try {
+                    delete(p);
+                    JOptionPane.showMessageDialog(insert, "Person deleted successfully!", "Delete - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+                    delete.getReset().doClick();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(insert, "An error occurred while deleting the person.", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
             }
         }
     }
