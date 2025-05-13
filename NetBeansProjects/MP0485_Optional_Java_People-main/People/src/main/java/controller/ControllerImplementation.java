@@ -38,6 +38,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.DateModel;
 import utils.Constants;
+import view.Count;
 
 /**
  * This class starts the visual part of the application and programs and manages
@@ -113,6 +114,8 @@ public class ControllerImplementation implements IController, ActionListener {
             handleReadAll();
         } else if (e.getSource() == menu.getDeleteAll()) {
             handleDeleteAll();
+        } else if (e.getSource() == menu.getCount()){
+            handleCountPeople();
         }
     }
 
@@ -218,6 +221,7 @@ public class ControllerImplementation implements IController, ActionListener {
         menu.getDelete().addActionListener(this);
         menu.getReadAll().addActionListener(this);
         menu.getDeleteAll().addActionListener(this);
+        menu.getCount().addActionListener(this);
     }
 
     private void handleInsertAction() {
@@ -349,6 +353,14 @@ private void handleInsertPerson() {
 
         }
     }
+    
+    public void handleCountPeople() {
+        int count = readAll().size();
+        Count countDialog = new Count(menu,true, count);
+        countDialog.setVisible(true);
+        
+    }
+    
 
     public void handleReadAll() {
         ArrayList<Person> s = readAll();
@@ -547,6 +559,11 @@ private void handleInsertPerson() {
                 System.exit(0);
             }
         }
+    }
+
+    @Override
+    public void count() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }
