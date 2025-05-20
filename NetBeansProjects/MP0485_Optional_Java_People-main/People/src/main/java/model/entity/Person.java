@@ -3,6 +3,7 @@ package model.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -21,6 +22,7 @@ public class Person implements Serializable{
     private String nif;
     private String name;
     private Date dateOfBirth;
+    private String email;
     @Transient
     private ImageIcon photo;
     @Lob
@@ -64,6 +66,16 @@ public class Person implements Serializable{
         this.photo = photo;
     }
 
+    public Person(String nif, String name, Date dateOfBirth, String email, ImageIcon photo, byte[] photoOnlyJPA) {
+        this.nif = nif;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.photo = photo;
+        this.photoOnlyJPA = photoOnlyJPA;
+    }
+
+    
     //Getters and Setters
     public String getName() {
         return name;
@@ -104,6 +116,14 @@ public class Person implements Serializable{
     public void setPhotoOnlyJPA(byte[] photoOnlyJPA) {
         this.photoOnlyJPA = photoOnlyJPA;
     }
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
         
     /**
      * Function used to compare two Personas. There cannot be two or more people
@@ -141,7 +161,7 @@ public class Person implements Serializable{
     
     /**
      * Function sed to show person's inform by console. Only for debugging 
-     * pourposes.
+     * purposes.
      * @return 
      */
     @Override
