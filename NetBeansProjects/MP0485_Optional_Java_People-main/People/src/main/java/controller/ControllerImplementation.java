@@ -31,6 +31,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.regex.Pattern;
 import javax.persistence.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -114,7 +115,7 @@ public class ControllerImplementation implements IController, ActionListener {
             handleReadAll();
         } else if (e.getSource() == menu.getDeleteAll()) {
             handleDeleteAll();
-        } else if (e.getSource() == menu.getCount()){
+        } else if (e.getSource() == menu.getCount()) {
             handleCountPeople();
         }
     }
@@ -228,9 +229,9 @@ public class ControllerImplementation implements IController, ActionListener {
         insert = new Insert(menu, true);
         insert.getInsert().addActionListener(this);
         insert.setVisible(true);
-    } 
+    }
 
-private void handleInsertPerson() {
+    private void handleInsertPerson() {
         Person p = new Person(insert.getNam().getText(), insert.getNif().getText());
         if (insert.getDateOfBirth().getModel().getValue() != null) {
             p.setDateOfBirth(((GregorianCalendar) insert.getDateOfBirth().getModel().getValue()).getTime());
@@ -238,6 +239,11 @@ private void handleInsertPerson() {
         if (insert.getPhoto().getIcon() != null) {
             p.setPhoto((ImageIcon) insert.getPhoto().getIcon());
         }
+
+        if (!insert.verifyEmail(insert.getEmail().getText())) {
+            return; 
+        }
+        p.setEmail(insert.getEmail().getText());
         try {
             insert(p);
             JOptionPane.showMessageDialog(insert, "Person inserted successfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
@@ -268,6 +274,9 @@ private void handleInsertPerson() {
                 pNew.getPhoto().getImage().flush();
                 read.getPhoto().setIcon(pNew.getPhoto());
             }
+            if (pNew.getEmail() != null) {
+                read.getEmail().setText(pNew.getEmail());
+            }
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
             read.getReset().doClick();
@@ -281,7 +290,7 @@ private void handleInsertPerson() {
     }
 
     public void handleDeletePerson() {
-        
+
         if (delete != null) {
             int confirm = JOptionPane.showConfirmDialog(insert, "Are you sure you want to delete this person?", "Confirm Deletion", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (confirm == JOptionPane.YES_OPTION) {
@@ -353,14 +362,13 @@ private void handleInsertPerson() {
 
         }
     }
-    
+
     public void handleCountPeople() {
         int count = readAll().size();
-        Count countDialog = new Count(menu,true, count);
+        Count countDialog = new Count(menu, true, count);
         countDialog.setVisible(true);
-        
+
     }
-    
 
     public void handleReadAll() {
         ArrayList<Person> s = readAll();
@@ -383,6 +391,9 @@ private void handleInsertPerson() {
                 } else {
                     model.setValueAt("no", i, 3);
                 }
+                if(s.get(i).getEmail() != null){
+                    model.setValueAt(s.get(i).getEmail(), i, 4);
+                }
             }
             readAll.setVisible(true);
         }
@@ -394,16 +405,16 @@ private void handleInsertPerson() {
 
         if (answer == 0) {
             try {
-                    deleteAll();
-                    JOptionPane.showMessageDialog(insert, "All people deleted successfully!", "DeleteAll - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(insert, "An error occurred while deleting the person.", "Error", JOptionPane.ERROR_MESSAGE);
+                deleteAll();
+                JOptionPane.showMessageDialog(insert, "All people deleted successfully!", "DeleteAll - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(insert, "An error occurred while deleting the person.", "Error", JOptionPane.ERROR_MESSAGE);
 
-                }
-            
+            }
+
         }
     }
-    
+
     /**
      * This function inserts the Person object with the requested NIF, if it
      * doesn't exist. If there is any access problem with the storage device,

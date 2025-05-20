@@ -18,6 +18,7 @@ import org.jdatepicker.JDatePicker;
 
 /**
  * Interface used to read a person. It is mandatory to enter the NIF.
+ *
  * @author Francesc Perez
  * @version 1.1.0
  */
@@ -57,6 +58,14 @@ public class Read extends javax.swing.JDialog {
         this.reset = reset;
     }
 
+    public JTextField getEmail() {
+        return emailField;
+    }
+
+    public void setEmail(String email) {
+        this.emailField = emailField;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -77,6 +86,8 @@ public class Read extends javax.swing.JDialog {
         dateOfBirth = new org.jdatepicker.JDatePicker();
         jLabel2 = new javax.swing.JLabel();
         reset = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        emailField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Read - People v1.1.0");
@@ -90,7 +101,7 @@ public class Read extends javax.swing.JDialog {
         read.setPreferredSize(new java.awt.Dimension(187, 33));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
@@ -142,7 +153,7 @@ public class Read extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.gridheight = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(24, 24, 12, 12);
@@ -205,7 +216,7 @@ public class Read extends javax.swing.JDialog {
         jLabel2.setText("Author: francesc.perez@stucom.com - Version 1.1.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -224,11 +235,42 @@ public class Read extends javax.swing.JDialog {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
         getContentPane().add(reset, gridBagConstraints);
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel9.setText("Email");
+        jLabel9.setMaximumSize(new java.awt.Dimension(150, 22));
+        jLabel9.setMinimumSize(new java.awt.Dimension(150, 22));
+        jLabel9.setPreferredSize(new java.awt.Dimension(150, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
+        getContentPane().add(jLabel9, gridBagConstraints);
+
+        emailField.setEnabled(false);
+        emailField.setMaximumSize(new java.awt.Dimension(400, 22));
+        emailField.setMinimumSize(new java.awt.Dimension(400, 22));
+        emailField.setPreferredSize(new java.awt.Dimension(400, 22));
+        emailField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                emailFieldActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
+        getContentPane().add(emailField, gridBagConstraints);
 
         pack();
         setLocationRelativeTo(null);
@@ -246,6 +288,7 @@ public class Read extends javax.swing.JDialog {
         nif.setEditable(true);
         name.setText("");
         photo.setIcon(null);
+        emailField.setText("");
         //We reset the calendar date to the current date ...
         LocalDate dateLocate = LocalDate.now();
         ZoneId systemTimeZone = ZoneId.systemDefault();
@@ -276,12 +319,18 @@ public class Read extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_nifKeyPressed
 
+    private void emailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailFieldActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdatepicker.JDatePicker dateOfBirth;
+    private javax.swing.JTextField emailField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField name;
     private javax.swing.JTextField nif;
     private javax.swing.JLabel photo;
