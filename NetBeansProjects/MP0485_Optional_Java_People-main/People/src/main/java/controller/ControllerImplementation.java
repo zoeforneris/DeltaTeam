@@ -241,9 +241,13 @@ public class ControllerImplementation implements IController, ActionListener {
         }
 
         if (!insert.verifyEmail(insert.getEmail().getText())) {
-            return; 
+            return;
         }
-        p.setEmail(insert.getEmail().getText());
+        p.setPostalCode(insert.getEmail().getText());
+        if (!insert.verifyPC(insert.getPostalCode().getText())) {
+            return;
+        }
+        p.setPostalCode(insert.getPostalCode().getText());
         try {
             insert(p);
             JOptionPane.showMessageDialog(insert, "Person inserted successfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
@@ -275,7 +279,10 @@ public class ControllerImplementation implements IController, ActionListener {
                 read.getPhoto().setIcon(pNew.getPhoto());
             }
             if (pNew.getEmail() != null) {
-                read.getEmail().setText(pNew.getEmail());
+                read.getEmailField().setText(pNew.getEmail());
+            }
+            if (pNew.getPostalCode() != null) {
+                read.getPostalCode().setText(pNew.getPostalCode());
             }
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
@@ -336,6 +343,10 @@ public class ControllerImplementation implements IController, ActionListener {
                     update.getPhoto().setIcon(pNew.getPhoto());
                     update.getUpdate().setEnabled(true);
                 }
+                if (pNew.getPostalCode() != null) {
+                    update.getPostalCode().setText(pNew.getPostalCode());
+                    update.getUpdate().setEnabled(true);
+                }
             } else {
                 JOptionPane.showMessageDialog(update, p.getNif() + " doesn't exist.", update.getTitle(), JOptionPane.WARNING_MESSAGE);
                 update.getReset().doClick();
@@ -351,6 +362,9 @@ public class ControllerImplementation implements IController, ActionListener {
             }
             if ((ImageIcon) (update.getPhoto().getIcon()) != null) {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
+            }
+            if (update.getPostalCode().getText() != null) {
+                p.setPostalCode(update.getPostalCode().getText());
             }
 
             try {
@@ -391,8 +405,11 @@ public class ControllerImplementation implements IController, ActionListener {
                 } else {
                     model.setValueAt("no", i, 3);
                 }
-                if(s.get(i).getEmail() != null){
+                if (s.get(i).getEmail() != null) {
                     model.setValueAt(s.get(i).getEmail(), i, 4);
+                }
+                if (s.get(i).getPostalCode() != null) {
+                    model.setValueAt(s.get(i).getPostalCode(), i, 5);
                 }
             }
             readAll.setVisible(true);
