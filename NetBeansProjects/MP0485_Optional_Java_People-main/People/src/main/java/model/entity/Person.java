@@ -23,6 +23,7 @@ public class Person implements Serializable{
     private String name;
     private Date dateOfBirth;
     private String email;
+    private String phoneNumber;
     @Transient
     private ImageIcon photo;
     @Lob
@@ -123,6 +124,14 @@ public class Person implements Serializable{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
         
     /**
