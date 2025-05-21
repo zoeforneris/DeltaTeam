@@ -241,9 +241,14 @@ public class ControllerImplementation implements IController, ActionListener {
         }
 
         if (!insert.verifyEmail(insert.getEmail().getText())) {
-            return; 
+            return;
         }
         p.setEmail(insert.getEmail().getText());
+
+        if (!insert.verifyPhoneNumber(insert.getPhoneNumber().getText())) {
+            return;
+        }
+        p.setPhoneNumber(insert.getPhoneNumber().getText());
         try {
             insert(p);
             JOptionPane.showMessageDialog(insert, "Person inserted successfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
@@ -275,7 +280,11 @@ public class ControllerImplementation implements IController, ActionListener {
                 read.getPhoto().setIcon(pNew.getPhoto());
             }
             if (pNew.getEmail() != null) {
-                read.getEmail().setText(pNew.getEmail());
+                read.getEmailField().setText(pNew.getEmail());
+            }
+            
+             if (pNew.getPhoneNumber() != null) {
+                read.getPhoneNumber().setText(pNew.getPhoneNumber());
             }
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
@@ -335,6 +344,16 @@ public class ControllerImplementation implements IController, ActionListener {
                     pNew.getPhoto().getImage().flush();
                     update.getPhoto().setIcon(pNew.getPhoto());
                     update.getUpdate().setEnabled(true);
+
+                }
+                if (pNew.getEmail() != null) {
+                    update.getEmail().setText(pNew.getEmail());
+                    update.getEmail().setEnabled(true);
+                }
+                
+                if (pNew.getPhoneNumber() != null) {
+                    update.getPhoneNumber().setText(pNew.getPhoneNumber());
+                    update.getPhoneNumber().setEnabled(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(update, p.getNif() + " doesn't exist.", update.getTitle(), JOptionPane.WARNING_MESSAGE);
@@ -353,6 +372,15 @@ public class ControllerImplementation implements IController, ActionListener {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
             }
 
+            if (!insert.verifyEmail(update.getEmail().getText())) {
+                return;
+            }
+            p.setEmail(update.getEmail().getText());
+
+            if (!insert.verifyPhoneNumber(update.getPhoneNumber().getText())) {
+                return;
+            }
+            p.setPhoneNumber(update.getPhoneNumber().getText());
             try {
                 update(p);
                 JOptionPane.showMessageDialog(insert, "Person updated successfully!", "Update - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
@@ -391,7 +419,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 } else {
                     model.setValueAt("no", i, 3);
                 }
-                if(s.get(i).getEmail() != null){
+                if (s.get(i).getEmail() != null) {
                     model.setValueAt(s.get(i).getEmail(), i, 4);
                 }
             }
