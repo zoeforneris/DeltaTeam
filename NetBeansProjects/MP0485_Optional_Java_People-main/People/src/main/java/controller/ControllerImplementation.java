@@ -249,6 +249,11 @@ public class ControllerImplementation implements IController, ActionListener {
             return;
         }
         p.setPhoneNumber(insert.getPhoneNumber().getText());
+        p.setPostalCode(insert.getEmail().getText());
+        if (!insert.verifyPC(insert.getPostalCode().getText())) {
+            return;
+        }
+        p.setPostalCode(insert.getPostalCode().getText());
         try {
             insert(p);
             JOptionPane.showMessageDialog(insert, "Person inserted successfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
@@ -282,9 +287,12 @@ public class ControllerImplementation implements IController, ActionListener {
             if (pNew.getEmail() != null) {
                 read.getEmailField().setText(pNew.getEmail());
             }
-            
-             if (pNew.getPhoneNumber() != null) {
+
+            if (pNew.getPhoneNumber() != null) {
                 read.getPhoneNumber().setText(pNew.getPhoneNumber());
+            }
+            if (pNew.getPostalCode() != null) {
+                read.getPcField().setText(pNew.getPostalCode());
             }
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
@@ -292,7 +300,7 @@ public class ControllerImplementation implements IController, ActionListener {
         }
     }
 
-    public void handleDeleteAction() {
+public void handleDeleteAction() {
         delete = new Delete(menu, true);
         delete.getDelete().addActionListener(this);
         delete.setVisible(true);
@@ -333,6 +341,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 update.getDateOfBirth().setEnabled(true);
                 update.getPhoto().setEnabled(true);
                 update.getUpdate().setEnabled(true);
+                update.getPostalCode().setEnabled(true);
                 update.getNam().setText(pNew.getName());
                 if (pNew.getDateOfBirth() != null) {
                     Calendar calendar = Calendar.getInstance();
@@ -355,6 +364,10 @@ public class ControllerImplementation implements IController, ActionListener {
                     update.getPhoneNumber().setText(pNew.getPhoneNumber());
                     update.getPhoneNumber().setEnabled(true);
                 }
+                if (pNew.getPostalCode() != null) {
+                    update.getPostalCode().setText(pNew.getPostalCode());
+                    update.getUpdate().setEnabled(true);
+                }
             } else {
                 JOptionPane.showMessageDialog(update, p.getNif() + " doesn't exist.", update.getTitle(), JOptionPane.WARNING_MESSAGE);
                 update.getReset().doClick();
@@ -371,6 +384,9 @@ public class ControllerImplementation implements IController, ActionListener {
             if ((ImageIcon) (update.getPhoto().getIcon()) != null) {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
             }
+            if (update.getPostalCode().getText() != null) {
+                p.setPostalCode(update.getPostalCode().getText());
+            }
 
             if (!insert.verifyEmail(update.getEmail().getText())) {
                 return;
@@ -381,6 +397,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 return;
             }
             p.setPhoneNumber(update.getPhoneNumber().getText());
+            
             try {
                 update(p);
                 JOptionPane.showMessageDialog(insert, "Person updated successfully!", "Update - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
@@ -422,6 +439,9 @@ public class ControllerImplementation implements IController, ActionListener {
                 if (s.get(i).getEmail() != null) {
                     model.setValueAt(s.get(i).getEmail(), i, 4);
                 }
+                if (s.get(i).getPostalCode() != null) {
+                    model.setValueAt(s.get(i).getPostalCode(), i, 5);
+                }
             }
             readAll.setVisible(true);
         }
@@ -451,7 +471,7 @@ public class ControllerImplementation implements IController, ActionListener {
      * @param p Person to insert
      */
     @Override
-    public void insert(Person p) {
+public void insert(Person p) {
         try {
             if (dao.read(p) == null) {
                 dao.insert(p);
@@ -482,7 +502,7 @@ public class ControllerImplementation implements IController, ActionListener {
      * @param p Person to update
      */
     @Override
-    public void update(Person p) {
+public void update(Person p) {
         try {
             dao.update(p);
         } catch (Exception ex) {
@@ -505,7 +525,7 @@ public class ControllerImplementation implements IController, ActionListener {
      * @param p Person to read
      */
     @Override
-    public void delete(Person p) {
+public void delete(Person p) {
         try {
             if (dao.read(p) != null) {
                 dao.delete(p);
@@ -537,7 +557,7 @@ public class ControllerImplementation implements IController, ActionListener {
      * @return Person or null
      */
     @Override
-    public Person read(Person p) {
+public Person read(Person p) {
         try {
             Person pTR = dao.read(p);
             if (pTR != null) {
@@ -564,7 +584,7 @@ public class ControllerImplementation implements IController, ActionListener {
      * @return ArrayList
      */
     @Override
-    public ArrayList<Person> readAll() {
+public ArrayList<Person> readAll() {
         ArrayList<Person> people = new ArrayList<>();
         try {
             people = dao.readAll();
@@ -584,7 +604,7 @@ public class ControllerImplementation implements IController, ActionListener {
      * problem with the storage device, the program stops.
      */
     @Override
-    public void deleteAll() {
+public void deleteAll() {
         try {
             dao.deleteAll();
         } catch (Exception ex) {
@@ -598,7 +618,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     @Override
-    public void count() {
+public void count() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
