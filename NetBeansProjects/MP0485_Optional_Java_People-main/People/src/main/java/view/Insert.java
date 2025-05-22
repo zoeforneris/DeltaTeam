@@ -76,6 +76,10 @@ public class Insert extends javax.swing.JDialog {
         return phoneNumberField;
     }
 
+    public JTextField getPostalCode() {
+        return pcField;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,8 +103,10 @@ public class Insert extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         phoneNumberField = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
         emailField = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        pcField = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert - People v1.1.0");
@@ -302,19 +308,6 @@ public class Insert extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
         getContentPane().add(phoneNumberField, gridBagConstraints);
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel10.setText("Email");
-        jLabel10.setMaximumSize(new java.awt.Dimension(150, 22));
-        jLabel10.setMinimumSize(new java.awt.Dimension(150, 22));
-        jLabel10.setPreferredSize(new java.awt.Dimension(150, 22));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
-        getContentPane().add(jLabel10, gridBagConstraints);
-
         emailField.setText("Enter your email. Example: name@aol.com");
         emailField.setMaximumSize(new java.awt.Dimension(400, 22));
         emailField.setMinimumSize(new java.awt.Dimension(400, 22));
@@ -327,6 +320,58 @@ public class Insert extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
         getContentPane().add(emailField, gridBagConstraints);
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel11.setText("Email");
+        jLabel11.setMaximumSize(new java.awt.Dimension(150, 22));
+        jLabel11.setMinimumSize(new java.awt.Dimension(150, 22));
+        jLabel11.setPreferredSize(new java.awt.Dimension(150, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
+        getContentPane().add(jLabel11, gridBagConstraints);
+
+        pcField.setText("Insert your Postal Code");
+        pcField.setMaximumSize(new java.awt.Dimension(400, 22));
+        pcField.setMinimumSize(new java.awt.Dimension(400, 22));
+        pcField.setPreferredSize(new java.awt.Dimension(400, 22));
+        pcField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pcFieldActionPerformed(evt);
+            }
+        });
+        pcField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                pcFieldKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                pcFieldKeyTyped(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
+        getContentPane().add(pcField, gridBagConstraints);
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel12.setText("Postal Code");
+        jLabel12.setMaximumSize(new java.awt.Dimension(150, 22));
+        jLabel12.setMinimumSize(new java.awt.Dimension(150, 22));
+        jLabel12.setPreferredSize(new java.awt.Dimension(150, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
+        getContentPane().add(jLabel12, gridBagConstraints);
 
         pack();
         setLocationRelativeTo(null);
@@ -347,6 +392,7 @@ public class Insert extends javax.swing.JDialog {
         photo.setIcon(null);
         emailField.setText("");
         phoneNumberField.setText("");
+        pcField.setText("");
         //We reset the calendar date to the current date ...
         LocalDate dateLocate = LocalDate.now();
         ZoneId systemTimeZone = ZoneId.systemDefault();
@@ -401,6 +447,40 @@ public class Insert extends javax.swing.JDialog {
             showInsert();
         }
     }//GEN-LAST:event_nifKeyPressed
+
+
+    private void nifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nifActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nifActionPerformed
+
+    private void emailFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailFieldKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailFieldKeyReleased
+
+    private void emailFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailFieldKeyTyped
+
+    }//GEN-LAST:event_emailFieldKeyTyped
+
+    private void emailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailFieldActionPerformed
+
+    }//GEN-LAST:event_emailFieldActionPerformed
+
+    private void insertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_insertActionPerformed
+
+    private void pcFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pcFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pcFieldActionPerformed
+
+    private void pcFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pcFieldKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pcFieldKeyReleased
+
+    private void pcFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pcFieldKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pcFieldKeyTyped
+
     public boolean verifyEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
@@ -415,9 +495,21 @@ public class Insert extends javax.swing.JDialog {
     public boolean verifyPhoneNumber(String phoneNumber) {
         String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?\\(?\\d{1,3}\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
 
-        if (!Pattern.matches(phoneRegex,phoneNumber)) {
+        if (!Pattern.matches(phoneRegex, phoneNumber)) {
             JOptionPane.showMessageDialog(insert, "Invalid phone number format: " + phoneNumberField.getText(), "Phone Number Validation", JOptionPane.ERROR_MESSAGE);
 
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    public boolean verifyPC(String postalCode) {
+        String postalCodeRegex = "^(\\d{5})(?:[-\s]?\\d{4})?$";
+
+        if (!Pattern.matches(postalCodeRegex, postalCode)) {
+            JOptionPane.showMessageDialog(insert, "Invalid Postal Code format: " + pcField.getText(), "Postal Code Validation", JOptionPane.ERROR_MESSAGE);
             return false;
         } else {
             return true;
@@ -430,13 +522,15 @@ public class Insert extends javax.swing.JDialog {
     private javax.swing.JTextField emailField;
     private javax.swing.JButton insert;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField name;
     private javax.swing.JTextField nif;
+    private javax.swing.JTextField pcField;
     private javax.swing.JTextField phoneNumberField;
     private javax.swing.JLabel phoneNumberLabel;
     private javax.swing.JLabel photo;

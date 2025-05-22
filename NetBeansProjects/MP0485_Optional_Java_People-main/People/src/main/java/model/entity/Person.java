@@ -24,6 +24,7 @@ public class Person implements Serializable{
     private Date dateOfBirth;
     private String email;
     private String phoneNumber;
+    private String postalCode;
     @Transient
     private ImageIcon photo;
     @Lob
@@ -33,7 +34,7 @@ public class Person implements Serializable{
         
     }
     
-    /**
+    /**             cha
      * Constructor to validate new person. Two persons cannot have the same NIF
      * @param nif 
      */
@@ -76,6 +77,15 @@ public class Person implements Serializable{
         this.photoOnlyJPA = photoOnlyJPA;
     }
 
+    public Person(String nif, String name, Date dateOfBirth, String email, String postalCode, ImageIcon photo, byte[] photoOnlyJPA) {
+        this.nif = nif;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.postalCode = postalCode;
+        this.photo = photo;
+        this.photoOnlyJPA = photoOnlyJPA;
+    }
     
     //Getters and Setters
     public String getName() {
@@ -133,6 +143,15 @@ public class Person implements Serializable{
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+  
         
     /**
      * Function used to compare two Personas. There cannot be two or more people
@@ -176,7 +195,8 @@ public class Person implements Serializable{
     @Override
     public String toString() {
         return "Person {" + "Name = " + name + ", NIF = " + nif
-                + ", DateOfBirth = " + dateOfBirth + ", Photo = " + (photo!=null) + "}";
+                + ", DateOfBirth = " + dateOfBirth + ", Photo = " + (photo!=null) + ", Email = " + email +
+                ", Postal Code = " + postalCode + "}";
     }
 
 }
