@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import model.entity.Admin;
+import model.entity.User;
 
 /**
  * This class implements the IDAO interface and completes the function code
@@ -38,9 +40,14 @@ public class DAOSQL implements IDAO {
     private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ";
     private final String SQL_DELETE_ALL = "TRUNCATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE();
 
+    //selects para usuarios normales y admin
+    private final String SQL_SELECT2 = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB2.getDbServerTABLE() + " WHERE (username = ?);";
+    private final String SQL_SELECT3 = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB3.getDbServerTABLE() + " WHERE (username = ?);";
+
     public Connection connect() throws SQLException {
         Connection conn;
         conn = DriverManager.getConnection(Routes.DB.getDbServerAddress() + Routes.DB.getDbServerComOpt(), Routes.DB.getDbServerUser(), Routes.DB.getDbServerPassword());
+        System.out.println("in connection");
         return conn;
     }
 
@@ -76,6 +83,58 @@ public class DAOSQL implements IDAO {
         disconnect(conn);
         return pReturn;
     }
+
+    public User readUser(User u) throws SQLException {
+        User uReturn = null;
+        Connection conn;
+        PreparedStatement instruction;
+        ResultSet rs;
+        conn = connect();
+        instruction = conn.prepareStatement(SQL_SELECT2);
+        instruction.setString(1, u.getUsername());
+        rs = instruction.executeQuery();
+        while (rs.next()) {
+            if (u instanceof User) {
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                uReturn = new User(username, password);
+            }
+        }
+        rs.close();
+        instruction.close();
+        disconnect(conn);
+        return uReturn;
+    }
+
+
+    public Admin readAdmin(Admin a) throws SQLException {
+        Admin aReturn = null;
+        Connection conn;
+        PreparedStatement instruction;
+        ResultSet rs;
+        conn = connect();
+        System.out.println("connected");
+        instruction = conn.prepareStatement(SQL_SELECT3);
+                System.out.println("1");
+
+        instruction.setString(1, a.getUsername());
+                System.out.println("2");
+
+        rs = instruction.executeQuery();
+        System.out.println("yes");
+        while (rs.next()) {
+            if (a instanceof Admin) {
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                aReturn = new Admin(username, password);
+            }
+        }
+        rs.close();
+        instruction.close();
+        disconnect(conn);
+        return aReturn;
+    }
+
 
     @Override
     public ArrayList<Person> readAll() throws SQLException{

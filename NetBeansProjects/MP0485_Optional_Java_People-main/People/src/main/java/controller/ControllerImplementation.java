@@ -31,15 +31,20 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.persistence.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import model.entity.Admin;
+import model.entity.User;
 import org.jdatepicker.DateModel;
 import utils.Constants;
 import view.Count;
+import view.Login;
 
 /**
  * This class starts the visual part of the application and programs and manages
@@ -53,7 +58,7 @@ public class ControllerImplementation implements IController, ActionListener {
 
     //Instance variables used so that both the visual and model parts can be 
     //accessed from the Controller.
-    private final DataStorageSelection dSS;
+    private DataStorageSelection dSS;
     private IDAO dao;
     private Menu menu;
     private Insert insert;
@@ -61,6 +66,7 @@ public class ControllerImplementation implements IController, ActionListener {
     private Delete delete;
     private Update update;
     private ReadAll readAll;
+    private final Login login;
 
     /**
      * This constructor allows the controller to know which data storage option
@@ -69,9 +75,15 @@ public class ControllerImplementation implements IController, ActionListener {
      *
      * @param dSS
      */
-    public ControllerImplementation(DataStorageSelection dSS) {
-        this.dSS = dSS;
-        ((JButton) (dSS.getAccept()[0])).addActionListener(this);
+//    public ControllerImplementation(DataStorageSelection dSS) {
+//        this.dSS = dSS;
+//        ((JButton) (dSS.getAccept()[0])).addActionListener(this);
+//    }
+// 
+    public ControllerImplementation(Login login) {
+        this.login = login;
+        login.getAccept().addActionListener(this); // Need to expose this button
+
     }
 
     /**
@@ -80,7 +92,15 @@ public class ControllerImplementation implements IController, ActionListener {
      */
     @Override
     public void start() {
-        dSS.setVisible(true);
+        try {
+            // Initialize with SQL DAO for authentication
+            setupSQLDatabase();
+            dao = new DAOSQL();
+            login.setVisible(true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Failed to initialize database connection", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
     }
 
     /**
@@ -91,7 +111,9 @@ public class ControllerImplementation implements IController, ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == dSS.getAccept()[0]) {
+        if (e.getSource() == login.getAccept()) {
+            handleLoginAction();
+        } else if (e.getSource() == dSS.getAccept()[0]) {
             handleDataStorageSelection();
         } else if (e.getSource() == menu.getInsert()) {
             handleInsertAction();
@@ -182,6 +204,11 @@ public class ControllerImplementation implements IController, ActionListener {
         try {
             Connection conn = DriverManager.getConnection(Routes.DB.getDbServerAddress() + Routes.DB.getDbServerComOpt(),
                     Routes.DB.getDbServerUser(), Routes.DB.getDbServerPassword());
+//            Connection conn = DriverManager.getConnection(
+//                    "jdbc:mysql://localhost:3306/mysql" + Routes.DB.getDbServerComOpt(),
+//                    Routes.DB.getDbServerUser(),
+//                    Routes.DB.getDbServerPassword()
+//            );
             if (conn != null) {
                 Statement stmt = conn.createStatement();
                 stmt.executeUpdate("create database if not exists " + Routes.DB.getDbServerDB() + ";");
@@ -190,10 +217,25 @@ public class ControllerImplementation implements IController, ActionListener {
                         + "name varchar(50), "
                         + "dateOfBirth DATE, "
                         + "photo varchar(200) );");
+                
+                stmt.executeUpdate("create table if not exists " + Routes.DB2.getDbServerDB() + "." + Routes.DB2.getDbServerTABLE() + "("
+                        + "username varchar(50) primary key, "
+                        + "password varchar(100) not null );");
+        
+                stmt.executeUpdate("create table if not exists " + Routes.DB3.getDbServerDB() + "." + Routes.DB3.getDbServerTABLE() + "("
+                        + "username varchar(50) primary key, "
+                        + "password varchar(100) not null );");
+//
+//                stmt.executeUpdate("insert into " + Routes.DB2.getDbServerDB() + "." + Routes.DB2.getDbServerTABLE()
+//                        + " (username, password) values ('zoef', '1234');");
+//
+//                stmt.executeUpdate("insert into " + Routes.DB3.getDbServerDB() + "." + Routes.DB3.getDbServerTABLE()
+//                        + " (username, password) values ('zoeadmin', '1010');");
                 stmt.close();
                 conn.close();
             }
         } catch (SQLException ex) {
+             ex.printStackTrace();
             JOptionPane.showMessageDialog(dSS, "SQL-DDBB structure not created. Closing application.", "SQL_DDBB - People v1.1.0", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
@@ -254,6 +296,7 @@ public class ControllerImplementation implements IController, ActionListener {
             return;
         }
         p.setPostalCode(insert.getPostalCode().getText());
+
         try {
             insert(p);
             JOptionPane.showMessageDialog(insert, "Person inserted successfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
@@ -300,7 +343,7 @@ public class ControllerImplementation implements IController, ActionListener {
         }
     }
 
-public void handleDeleteAction() {
+    public void handleDeleteAction() {
         delete = new Delete(menu, true);
         delete.getDelete().addActionListener(this);
         delete.setVisible(true);
@@ -359,7 +402,7 @@ public void handleDeleteAction() {
                     update.getEmail().setText(pNew.getEmail());
                     update.getEmail().setEnabled(true);
                 }
-                
+
                 if (pNew.getPhoneNumber() != null) {
                     update.getPhoneNumber().setText(pNew.getPhoneNumber());
                     update.getPhoneNumber().setEnabled(true);
@@ -397,7 +440,7 @@ public void handleDeleteAction() {
                 return;
             }
             p.setPhoneNumber(update.getPhoneNumber().getText());
-            
+
             try {
                 update(p);
                 JOptionPane.showMessageDialog(insert, "Person updated successfully!", "Update - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
@@ -463,6 +506,55 @@ public void handleDeleteAction() {
         }
     }
 
+    public void handleLoginAction() {
+
+        String username = login.getUsername().getText();
+        String password = new String(login.getPassword().getPassword());
+
+        try {
+
+            Admin a = new Admin(username);
+            User u = new User(username);
+            Admin authenticatedPerson = null;
+            User authenticatedPerson2 = null;
+
+            // First try to read as Admin
+            authenticatedPerson = ((DAOSQL) dao).readAdmin(a);
+
+            if (authenticatedPerson != null) {
+                if ((authenticatedPerson).getPassword().equals(password)) {
+                    JOptionPane.showMessageDialog(login, "Admin login successful!", "Login", JOptionPane.INFORMATION_MESSAGE);
+                    login.dispose();
+                    showDataStorageSelection();
+                    return;
+                }
+            } else {
+
+                authenticatedPerson2 = ((DAOSQL) dao).readUser(u);
+                if (authenticatedPerson2 != null && ((User) authenticatedPerson2).getPassword().equals(password)) {
+                    // User login successful
+                    JOptionPane.showMessageDialog(login, "User login successful!", "Login", JOptionPane.INFORMATION_MESSAGE);
+                    login.dispose();
+                    showDataStorageSelection();
+                    return;
+                }
+            }
+
+            // If neither worked
+            JOptionPane.showMessageDialog(login, "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(login, "Database error: " + ex.getMessage(), "Login Error", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(ControllerImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void showDataStorageSelection() {
+        dSS = new DataStorageSelection();
+        ((JButton) dSS.getAccept()[0]).addActionListener(this);
+        dSS.setVisible(true);
+    }
+
     /**
      * This function inserts the Person object with the requested NIF, if it
      * doesn't exist. If there is any access problem with the storage device,
@@ -471,7 +563,7 @@ public void handleDeleteAction() {
      * @param p Person to insert
      */
     @Override
-public void insert(Person p) {
+    public void insert(Person p) {
         try {
             if (dao.read(p) == null) {
                 dao.insert(p);
@@ -502,7 +594,7 @@ public void insert(Person p) {
      * @param p Person to update
      */
     @Override
-public void update(Person p) {
+    public void update(Person p) {
         try {
             dao.update(p);
         } catch (Exception ex) {
@@ -525,7 +617,7 @@ public void update(Person p) {
      * @param p Person to read
      */
     @Override
-public void delete(Person p) {
+    public void delete(Person p) {
         try {
             if (dao.read(p) != null) {
                 dao.delete(p);
@@ -557,7 +649,7 @@ public void delete(Person p) {
      * @return Person or null
      */
     @Override
-public Person read(Person p) {
+    public Person read(Person p) {
         try {
             Person pTR = dao.read(p);
             if (pTR != null) {
@@ -584,7 +676,7 @@ public Person read(Person p) {
      * @return ArrayList
      */
     @Override
-public ArrayList<Person> readAll() {
+    public ArrayList<Person> readAll() {
         ArrayList<Person> people = new ArrayList<>();
         try {
             people = dao.readAll();
@@ -604,7 +696,7 @@ public ArrayList<Person> readAll() {
      * problem with the storage device, the program stops.
      */
     @Override
-public void deleteAll() {
+    public void deleteAll() {
         try {
             dao.deleteAll();
         } catch (Exception ex) {
@@ -618,7 +710,7 @@ public void deleteAll() {
     }
 
     @Override
-public void count() {
+    public void count() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
