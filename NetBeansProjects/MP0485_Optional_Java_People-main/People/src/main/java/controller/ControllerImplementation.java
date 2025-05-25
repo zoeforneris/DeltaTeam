@@ -96,7 +96,7 @@ public class ControllerImplementation implements IController, ActionListener {
     public void start() {
         try {
             // Initialize with SQL DAO for authentication
-//            setupSQLDatabase();
+            setupSQLDatabase();
             dao = new DAOSQL();
             login.setVisible(true);
         } catch (Exception ex) {
