@@ -47,7 +47,6 @@ public class DAOSQL implements IDAO {
     public Connection connect() throws SQLException {
         Connection conn;
         conn = DriverManager.getConnection(Routes.DB.getDbServerAddress() + Routes.DB.getDbServerComOpt(), Routes.DB.getDbServerUser(), Routes.DB.getDbServerPassword());
-        System.out.println("in connection");
         return conn;
     }
 
@@ -113,15 +112,11 @@ public class DAOSQL implements IDAO {
         PreparedStatement instruction;
         ResultSet rs;
         conn = connect();
-        System.out.println("connected");
         instruction = conn.prepareStatement(SQL_SELECT3);
-                System.out.println("1");
 
         instruction.setString(1, a.getUsername());
-                System.out.println("2");
 
         rs = instruction.executeQuery();
-        System.out.println("yes");
         while (rs.next()) {
             if (a instanceof Admin) {
                 String username = rs.getString("username");
