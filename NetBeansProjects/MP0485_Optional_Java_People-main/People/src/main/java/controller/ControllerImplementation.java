@@ -43,6 +43,7 @@ import model.entity.Admin;
 import model.entity.User;
 import org.jdatepicker.DateModel;
 import utils.Constants;
+import utils.UserRoles;
 import view.Count;
 import view.Login;
 
@@ -67,6 +68,7 @@ public class ControllerImplementation implements IController, ActionListener {
     private Update update;
     private ReadAll readAll;
     private final Login login;
+    private String currentRole;
 
     /**
      * This constructor allows the controller to know which data storage option
@@ -225,12 +227,12 @@ public class ControllerImplementation implements IController, ActionListener {
                 stmt.executeUpdate("create table if not exists " + Routes.DB3.getDbServerDB() + "." + Routes.DB3.getDbServerTABLE() + "("
                         + "username varchar(50) primary key, "
                         + "password varchar(100) not null );");
-//
-//                stmt.executeUpdate("insert into " + Routes.DB2.getDbServerDB() + "." + Routes.DB2.getDbServerTABLE()
-//                        + " (username, password) values ('zoef', '1234');");
-//
-//                stmt.executeUpdate("insert into " + Routes.DB3.getDbServerDB() + "." + Routes.DB3.getDbServerTABLE()
-//                        + " (username, password) values ('zoeadmin', '1010');");
+
+                stmt.executeUpdate("insert into " + Routes.DB2.getDbServerDB() + "." + Routes.DB2.getDbServerTABLE()
+                        + " (username, password) values ('zoef', '1234');");
+
+                stmt.executeUpdate("insert into " + Routes.DB3.getDbServerDB() + "." + Routes.DB3.getDbServerTABLE()
+                        + " (username, password) values ('zoeadmin', '1010');");
                 stmt.close();
                 conn.close();
             }
@@ -257,7 +259,9 @@ public class ControllerImplementation implements IController, ActionListener {
 
     private void setupMenu() {
         menu = new Menu();
+        configureMenuBasedOnRole();
         menu.setVisible(true);
+        
         menu.getInsert().addActionListener(this);
         menu.getRead().addActionListener(this);
         menu.getUpdate().addActionListener(this);
@@ -266,8 +270,27 @@ public class ControllerImplementation implements IController, ActionListener {
         menu.getDeleteAll().addActionListener(this);
         menu.getCount().addActionListener(this);
     }
+    
+    private void configureMenuBasedOnRole(){
+        boolean isAdmin = UserRoles.ADMIN.equals(currentRole);
+        
+        menu.getInsert().setEnabled(isAdmin);
+        menu.getUpdate().setEnabled(isAdmin);
+        menu.getDelete().setEnabled(isAdmin);
+        menu.getDeleteAll().setEnabled(isAdmin);
+        
+        
+        menu.getRead().setEnabled(true);
+        menu.getReadAll().setEnabled(true);
+        menu.getCount().setEnabled(true);
+        
+        menu.setTitle("Menu - People v1.1.( "+ currentRole +" )");
+        
+    }
+
 
     private void handleInsertAction() {
+        if (!validateAdminAccess()) return;
         insert = new Insert(menu, true);
         insert.getInsert().addActionListener(this);
         insert.setVisible(true);
@@ -344,6 +367,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleDeleteAction() {
+        if (!validateAdminAccess()) return;
         delete = new Delete(menu, true);
         delete.getDelete().addActionListener(this);
         delete.setVisible(true);
@@ -484,6 +508,9 @@ public class ControllerImplementation implements IController, ActionListener {
                 }
                 if (s.get(i).getPostalCode() != null) {
                     model.setValueAt(s.get(i).getPostalCode(), i, 5);
+                    }
+                if (s.get(i).getPhoneNumber() != null) {
+                    model.setValueAt(s.get(i).getPhoneNumber(), i, 6);
                 }
             }
             readAll.setVisible(true);
@@ -523,6 +550,7 @@ public class ControllerImplementation implements IController, ActionListener {
 
             if (authenticatedPerson != null) {
                 if ((authenticatedPerson).getPassword().equals(password)) {
+                    currentRole = UserRoles.ADMIN;
                     JOptionPane.showMessageDialog(login, "Admin login successful!", "Login", JOptionPane.INFORMATION_MESSAGE);
                     login.dispose();
                     showDataStorageSelection();
@@ -532,6 +560,7 @@ public class ControllerImplementation implements IController, ActionListener {
 
                 authenticatedPerson2 = ((DAOSQL) dao).readUser(u);
                 if (authenticatedPerson2 != null && ((User) authenticatedPerson2).getPassword().equals(password)) {
+                    currentRole = UserRoles.USER;
                     // User login successful
                     JOptionPane.showMessageDialog(login, "User login successful!", "Login", JOptionPane.INFORMATION_MESSAGE);
                     login.dispose();
@@ -539,8 +568,7 @@ public class ControllerImplementation implements IController, ActionListener {
                     return;
                 }
             }
-
-            // If neither worked
+                // If neither worked
             JOptionPane.showMessageDialog(login, "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
 
         } catch (SQLException ex) {
@@ -548,11 +576,20 @@ public class ControllerImplementation implements IController, ActionListener {
             Logger.getLogger(ControllerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    private boolean validateAdminAccess() {
+        if (!UserRoles.ADMIN.equals(currentRole)) {
+           JOptionPane.showMessageDialog(menu, "You don't have permission to perform this action","Access Denied", JOptionPane.WARNING_MESSAGE);
+           return false;
+        }
+        return true;
+    }
+    
     private void showDataStorageSelection() {
         dSS = new DataStorageSelection();
         ((JButton) dSS.getAccept()[0]).addActionListener(this);
         dSS.setVisible(true);
+        dSS.setTitle("Select Storage -("+ currentRole + ")");
     }
 
     /**

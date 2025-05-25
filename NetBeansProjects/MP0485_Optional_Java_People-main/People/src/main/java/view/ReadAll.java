@@ -21,6 +21,7 @@ public class ReadAll extends javax.swing.JDialog {
         table.getColumnModel().getColumn(3).setCellRenderer( centerRenderer );
         table.getColumnModel().getColumn(4).setCellRenderer( centerRenderer );
         table.getColumnModel().getColumn(5).setCellRenderer( centerRenderer );
+        table.getColumnModel().getColumn(6).setCellRenderer( centerRenderer );
         setLocationRelativeTo(null);
         exportButton.addActionListener(e -> exportToCSV());
 
@@ -86,14 +87,14 @@ public class ReadAll extends javax.swing.JDialog {
 
             },
             new String [] {
-                "NIF", "Name", "Date of Birth", "Photo", "Email", "Postal Code"
+                "NIF", "Name", "Date of Birth", "Photo", "Email", "Postal Code", "Phone Number"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -110,10 +111,11 @@ public class ReadAll extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 96;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(24, 24, 12, 24);
+        gridBagConstraints.insets = new java.awt.Insets(24, 41, 12, 41);
         getContentPane().add(jScrollPane1, gridBagConstraints);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 2, 8)); // NOI18N
@@ -133,6 +135,7 @@ public class ReadAll extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(12, 24, 12, 24);
         getContentPane().add(exportButton, gridBagConstraints);
 
         pack();
