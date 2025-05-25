@@ -228,10 +228,10 @@ public class ControllerImplementation implements IController, ActionListener {
                         + "username varchar(50) primary key, "
                         + "password varchar(100) not null );");
 
-                stmt.executeUpdate("insert into " + Routes.DB2.getDbServerDB() + "." + Routes.DB2.getDbServerTABLE()
+                stmt.executeUpdate("insert ignore into " + Routes.DB2.getDbServerDB() + "." + Routes.DB2.getDbServerTABLE()
                         + " (username, password) values ('zoef', '1234');");
 
-                stmt.executeUpdate("insert into " + Routes.DB3.getDbServerDB() + "." + Routes.DB3.getDbServerTABLE()
+                stmt.executeUpdate("insert ignore into " + Routes.DB3.getDbServerDB() + "." + Routes.DB3.getDbServerTABLE()
                         + " (username, password) values ('zoeadmin', '1010');");
                 stmt.close();
                 conn.close();
